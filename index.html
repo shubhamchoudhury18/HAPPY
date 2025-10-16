@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For Me💖</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      background: url('bg.jpg') no-repeat center/cover;
+      font-family: "Poppins", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      perspective: 1200px;
+    }
+
+    /* ✨ Star background */
+    .stars {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      opacity: 0.6;
+      animation: twinkle 2s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.4); }
+    }
+
+    /* 💫 Gallery container (now centered perfectly) */
+    .gallery {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform-style: preserve-3d;
+      z-index: 1;
+    }
+
+    /* The 3D rotating ring */
+    .circle {
+      position: absolute;
+      width: 1000px;
+      height: 1000px;
+      transform-style: preserve-3d;
+      animation: spin 80s linear infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    @keyframes spin {
+      from { transform: rotateY(0deg); }
+      to { transform: rotateY(360deg); }
+    }
+
+    .circle img {
+      position: absolute;
+      width: 250px;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: all 0.8s ease;
+      transform-style: preserve-3d;
+    }
+
+    .circle img:hover {
+      transform: scale(1.15) translateZ(20px);
+      box-shadow: 0 0 40px rgba(255, 105, 180, 0.9);
+      z-index: 10;
+    }
+
+    /* 🩷 Popup view */
+    .image-popup {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .image-popup.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .image-popup img {
+      max-width: 75%;
+      max-height: 80vh;
+      border-radius: 25px;
+      box-shadow: 0 0 60px rgba(255, 105, 180, 1);
+      animation: zoomIn 0.5s ease forwards;
+      transform: scale(0.9);
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .image-popup span {
+      position: absolute;
+      top: 25px;
+      right: 45px;
+      font-size: 2.5rem;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .image-popup span:hover {
+      color: hotpink;
+      transform: scale(1.2);
+    }
+
+    /* ✨ Title */
+    .title {
+      position: absolute;
+      bottom: 40px;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-size: 2.5rem;
+      text-shadow: 0 0 20px pink, 0 0 40px hotpink;
+      animation: glow 3s ease-in-out infinite alternate;
+      z-index: 2;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 20px pink; }
+      to { text-shadow: 0 0 50px hotpink; }
+    }
+
+    audio {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+
+  <div class="gallery">
+    <div class="circle" id="circle"></div>
+  </div>
+
+  <div class="title">💖 CHOUDHURY SHUBHAM 💖</div>
+
+  <div class="image-popup" id="popup">
+    <span id="close">&times;</span>
+    <img src="" alt="Popup Image">
+  </div>
+
+  <audio autoplay loop>
+    <source src="music.mp3" type="audio/mp3" />
+  </audio>
+
+  <script>
+    // 🌟 Generate Stars
+    const stars = document.querySelector('.stars');
+    for (let i = 0; i < 120; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      s.style.top = Math.random() * 100 + '%';
+      s.style.left = Math.random() * 100 + '%';
+      s.style.animationDelay = (Math.random() * 2) + 's';
+      stars.appendChild(s);
+    }
+
+    // 💫 Create the 3D image circle (centered)
+    const circle = document.getElementById('circle');
+    const total = 18;
+    const radius = 350;
+
+    for (let i = 1; i <= total; i++) {
+      const img = document.createElement('img');
+      img.src = `${i}.png`;
+      const angle = (i / total) * 360;
+      img.style.transform = `rotateY(${angle}deg) translateZ(${radius}px) rotateY(-${angle}deg)`;
+      circle.appendChild(img);
+    }
+
+    // 💞 Popup behavior
+    const popup = document.getElementById('popup');
+    const popupImg = popup.querySelector('img');
+    const close = document.getElementById('close');
+
+    circle.addEventListener('click', (e) => {
+      if (e.target.tagName === 'IMG') {
+        popup.classList.add('active');
+        popupImg.src = e.target.src;
+      }
+    });
+
+    close.addEventListener('click', () => {
+      popup.classList.remove('active');
+    });
+  </script>
+</body>
+</html>
